@@ -7,14 +7,51 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Categorie {
+  id       Int       @id @default(autoincrement())
+  name     String    @unique @db.VarChar(50)
+  products Product[]
+
+  @@map("categories")
+}
+
+model Partner {
+  id               Int    @id @default(autoincrement())
+  corporate_reason String @db.VarChar(255)
+  cnpj             String @db.VarChar(14)
+  cellphone        String @db.VarChar(13)
+  email            String @db.VarChar(255)
+  password_hash    String @db.VarChar(255)
+
+  @@unique(fields: [email])
+  @@map("partners")
+}
+
+model Product {
+  id            Int       @id @default(autoincrement())
+  name          String    @db.VarChar(255)
+  price         Decimal   @db.Decimal(10, 2)
+  description   String
+  image         String?   @db.VarChar(255)
+  ean           String    @db.VarChar(13)
+  highlight     Boolean
+  average_score Decimal?  @db.Decimal(3, 2)
+  categorie_id  Int
+  discount      Decimal?  @db.Decimal(5, 2)
+  categories    Categorie @relation(fields: [categorie_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_categorie")
+
+  @@unique(fields: [ean])
+  @@map("products")
+}
+
 model User {
-  id            Int    @id @default(autoincrement())
-  first_name    String @db.VarChar(50)
-  last_name     String @db.VarChar(50)
-  email         String @db.VarChar(255)
-  password_hash String @db.VarChar(255)
-  cellphone     String @db.VarChar(13)
+  id            Int      @id @default(autoincrement())
+  first_name    String   @db.VarChar(50)
+  last_name     String   @db.VarChar(50)
+  email         String   @unique @db.VarChar(255)
+  password_hash String   @db.VarChar(255)
+  cellphone     String   @db.VarChar(13)
+  date_birth    DateTime @db.Date
 
   @@map("users")
-  @@unique(fields: [email])
 }
