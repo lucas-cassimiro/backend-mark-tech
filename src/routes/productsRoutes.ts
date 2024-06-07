@@ -8,5 +8,6 @@ const productsRoutes = Router()
 
 productsRoutes.post('/', upload.single('file'), new ProductsController().create)
 productsRoutes.get('/:param', new ProductsController().show)
+productsRoutes.get('/product/highlight', new ProductsController().index)
 
 export default productsRoutes

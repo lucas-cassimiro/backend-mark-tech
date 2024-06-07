@@ -39,7 +39,7 @@ export class ProductsController {
     }
 
     async show(req: Request, res: Response) {
-        const param = req.params.param.toLowerCase().replace("acougue", "Açougue");
+        const param = req.params.param.toLowerCase().replace('acougue', 'Açougue')
 
         try {
             const products = await prisma.product.findMany({
@@ -63,6 +63,20 @@ export class ProductsController {
             return res.status(200).send(products);
         } catch (error) {
             return res.status(500).send({ message: 'Internal server error' });
+        }
+    }
+
+    async index(req: Request, res: Response) {
+        try {
+            const products = await prisma.product.findMany({
+                where: {
+                    highlight: true
+                }
+            })
+
+            return res.send(products)
+        } catch (error) {
+            return res.status(500).send({ message: 'Internal server error' })
         }
     }
 }
