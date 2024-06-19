@@ -6,6 +6,15 @@ import jwt from "jsonwebtoken";
 import prisma from "../../../config/clientPrisma";
 
 export class PartnersController {
+    async index(_req: Request, res: Response) {
+        try {
+            const partners = await prisma.partner.findMany()
+            return res.json(partners)
+        } catch (error) {
+            return res.status(500).send({ message: 'Não foi possível buscar a lista de parceiros.' })
+        }
+    }
+
     async create(req: Request, res: Response) {
         try {
             const { corporate_reason, cnpj, email, password, cellphone } =
@@ -89,6 +98,7 @@ export class PartnersController {
             return res.status(500).send({ message: "Internal server error" });
         }
     }
+
     async getProfile(req: Request, res: Response) {
         return res.json(req.user);
     }
